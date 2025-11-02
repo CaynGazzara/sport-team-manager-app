@@ -1,0 +1,151 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">
+          <span class="material-icons">fitness_center</span>
+          {{ title }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="loading-spinner">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+
+        <form *ngIf="!loading" [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
+          
+          <!-- ✅ NOVO: Seleção de Time -->
+          <div class="row" *ngIf="teams.length > 0">
+            <div class="col-12 mb-3">
+              <label for="teamId" class="form-label">Time *</label>
+              <select 
+                class="form-select" 
+                id="teamId" 
+                formControlName="teamId"
+                [class.is-invalid]="trainingForm.get('teamId')?.invalid && trainingForm.get('teamId')?.touched">
+                <option value="">Selecione um time</option>
+                <option *ngFor="let team of teams" [value]="team.id">
+                  {{ team.name }} - {{ team.coachName }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="trainingForm.get('teamId')?.errors?.['required']">
+                Seleção de time é obrigatória
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Data -->
+            <div class="col-md-6 mb-3">
+              <label for="date" class="form-label">Data do Treino *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="date" 
+                formControlName="date"
+                [class.is-invalid]="trainingForm.get('date')?.invalid && trainingForm.get('date')?.touched">
+              <div class="invalid-feedback" *ngIf="trainingForm.get('date')?.errors?.['required']">
+                Data é obrigatória
+              </div>
+            </div>
+
+            <!-- Duração -->
+            <div class="col-md-6 mb-3">
+              <label for="duration" class="form-label">Duração *</label>
+              <select 
+                class="form-select" 
+                id="duration" 
+                formControlName="duration"
+                [class.is-invalid]="trainingForm.get('duration')?.invalid && trainingForm.get('duration')?.touched">
+                <option *ngFor="let duration of durationOptions" [value]="duration.value">
+                  {{ duration.label }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="trainingForm.get('duration')?.errors?.['required']">
+                Duração é obrigatória
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Local -->
+            <div class="col-md-6 mb-3">
+              <label for="location" class="form-label">Local *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="location" 
+                formControlName="location"
+                placeholder="Ex: Campo Principal"
+                [class.is-invalid]="trainingForm.get('location')?.invalid && trainingForm.get('location')?.touched">
+              <div class="invalid-feedback" *ngIf="trainingForm.get('location')?.errors?.['required']">
+                Local é obrigatório
+              </div>
+            </div>
+
+            <!-- Foco -->
+            <div class="col-md-6 mb-3">
+              <label for="focus" class="form-label">Foco do Treino *</label>
+              <select 
+                class="form-select" 
+                id="focus" 
+                formControlName="focus"
+                [class.is-invalid]="trainingForm.get('focus')?.invalid && trainingForm.get('focus')?.touched">
+                <option *ngFor="let focus of focusTypes" [value]="focus">
+                  {{ focus }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="trainingForm.get('focus')?.errors?.['required']">
+                Foco é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <!-- Observações -->
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="notes" class="form-label">Observações</label>
+              <textarea 
+                class="form-control" 
+                id="notes" 
+                formControlName="notes"
+                rows="3"
+                placeholder="Observações sobre o treino..."></textarea>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <div class="row">
+            <div class="col-12">
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-secondary" (click)="cancel()">
+                  <span class="material-icons">cancel</span>
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="submitting || trainingForm.invalid">
+                  <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                  <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
+                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Treino
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- ✅ Mensagem se não houver times -->
+        <div *ngIf="teams.length === 0 && !loading" class="alert alert-warning">
+          <span class="material-icons">warning</span>
+          Nenhum time encontrado. Você precisa criar um time antes de agendar treinos.
+          <button class="btn btn-sm btn-outline-primary ms-2" routerLink="/teams/new">
+            Criar Time
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

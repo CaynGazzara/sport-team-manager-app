@@ -1,9 +1,10 @@
-﻿using System.Numerics;
+﻿using SportTeamManager.Domain.Common;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace SportTeamManager.Domain.Entities;
 
-public class Team
+public class Team : BaseEntity
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

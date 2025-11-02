@@ -1,0 +1,71 @@
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.match-info {
+  .team-info {
+    flex: 1;
+    
+    .team-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .score {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+  }
+  
+  .vs-text {
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin: 0 1rem;
+  }
+  
+  .match-details {
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      
+      .material-icons {
+        font-size: 1rem;
+        color: var(--secondary-color);
+      }
+    }
+  }
+}
+
+.card-footer {
+  .btn-group {
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+  }
+}

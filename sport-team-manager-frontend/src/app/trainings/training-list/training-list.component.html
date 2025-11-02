@@ -1,0 +1,93 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="mb-1">
+      <span class="material-icons">fitness_center</span>
+      Treinos do Time
+    </h2>
+    <p class="text-muted mb-0">Gerencie os treinos e acompanhe a frequência dos jogadores</p>
+  </div>
+  <button class="btn btn-primary" routerLink="/trainings/new">
+    <span class="material-icons">add</span>
+    Novo Treino
+  </button>
+</div>
+
+<div *ngIf="loading" class="loading-spinner">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+</div>
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Todos os Treinos</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Local</th>
+              <th>Foco</th>
+              <th>Duração</th>
+              <th>Observações</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let training of trainings">
+              <td>
+                <strong>{{ formatDate(training.date) }}</strong>
+              </td>
+              <td>
+                <span class="badge bg-dark">
+                  {{ formatTime(training.duration) }}
+                </span>
+              </td>
+              <td>{{ training.location }}</td>
+              <td>
+                <span class="badge" [ngClass]="getFocusBadgeClass(training.focus)">
+                  {{ training.focus }}
+                </span>
+              </td>
+              <td>{{ training.duration }}</td>
+              <td>
+                <span *ngIf="training.notes" class="text-muted">
+                  {{ training.notes | slice:0:50 }}{{ training.notes.length > 50 ? '...' : '' }}
+                </span>
+                <span *ngIf="!training.notes" class="text-muted">-</span>
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" [routerLink]="['/trainings/edit', training.id]">
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteTraining(training.id)">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="trainings.length === 0">
+              <td colspan="7" class="text-center text-muted py-4">
+                <span class="material-icons display-4">fitness_center</span>
+                <p class="mt-2">Nenhum treino encontrado</p>
+                <button class="btn btn-primary mt-2" routerLink="/trainings/new">
+                  <span class="material-icons">add</span>
+                  Agendar Primeiro Treino
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

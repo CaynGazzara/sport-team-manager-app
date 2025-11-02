@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>
+    <span class="material-icons">groups</span>
+    Gerenciar Times
+  </h2>
+  <button class="btn btn-primary" routerLink="/teams/new">
+    <span class="material-icons">add</span>
+    Novo Time
+  </button>
+</div>
+
+<div *ngIf="loading" class="loading-spinner">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+</div>
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error">
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let team of teams">
+      <div class="card h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0">{{ team.name }}</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-2">
+            <span class="badge" [ngClass]="getSportTypeBadgeClass(team.sportType)">
+              {{ team.sportType }}
+            </span>
+          </div>
+          
+          <div class="team-info">
+            <div class="info-item">
+              <span class="material-icons">person</span>
+              <strong>Treinador:</strong> {{ team.coachName }}
+            </div>
+            <div class="info-item">
+              <span class="material-icons">stadium</span>
+              <strong>Estádio:</strong> {{ team.homeField }}
+            </div>
+            <div class="info-item">
+              <span class="material-icons">palette</span>
+              <strong>Cores:</strong> {{ team.colors }}
+            </div>
+            <div class="info-item">
+              <span class="material-icons">calendar_today</span>
+              <strong>Fundado:</strong> {{ getFoundedYears(team.foundedDate) }} anos
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="btn-group w-100">
+            <button class="btn btn-outline-primary btn-sm" [routerLink]="['/teams/edit', team.id]">
+              <span class="material-icons">edit</span>
+              Editar
+            </button>
+            <button class="btn btn-outline-info btn-sm">
+              <span class="material-icons">people</span>
+              Jogadores
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteTeam(team.id)">
+              <span class="material-icons">delete</span>
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="teams.length === 0" class="text-center text-muted py-5">
+    <span class="material-icons display-1">sports</span>
+    <h4 class="mt-3">Nenhum time encontrado</h4>
+    <p class="mb-4">Comece criando o primeiro time do seu sistema</p>
+    <button class="btn btn-primary" routerLink="/teams/new">
+      <span class="material-icons">add</span>
+      Criar Primeiro Time
+    </button>
+  </div>
+</div>

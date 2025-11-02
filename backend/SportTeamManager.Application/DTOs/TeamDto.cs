@@ -30,3 +30,9 @@ public class UpdateTeamDto
     public string HomeField { get; set; } = string.Empty;
     public string Colors { get; set; } = string.Empty;
 }
+
+public class TeamWithPlayersDto
+{
+    public TeamDto Team { get; set; } = null!;
+    public List<PlayerDto> Players { get; set; } = new();
+}

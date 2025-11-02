@@ -2,7 +2,6 @@
 using SportTeamManager.Application.Interfaces;
 using SportTeamManager.Domain.Entities;
 using SportTeamManager.Infrastructure.Data;
-using System.Numerics;
 
 namespace SportTeamManager.Infrastructure.Repositories;
 
@@ -49,15 +48,24 @@ public class PlayerRepository : IPlayerRepository
         return await _context.Players.AnyAsync(p => p.Id == id);
     }
 
+    public async Task<int> CountAsync()
+    {
+        return await _context.Players.CountAsync();
+    }
+
     public async Task<IEnumerable<Player>> GetActivePlayersAsync()
     {
-        return await _context.Players.Where(p => p.IsActive).ToListAsync();
+        return await _context.Players
+            .Where(p => p.IsActive)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Player>> GetPlayersByPositionAsync(string position)
     {
         return await _context.Players
             .Where(p => p.Position == position && p.IsActive)
+            .OrderBy(p => p.Name)
             .ToListAsync();
     }
 
@@ -65,6 +73,47 @@ public class PlayerRepository : IPlayerRepository
     {
         return await _context.Players
             .Include(p => p.Statistics)
+            .Include(p => p.Team)
             .FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task<IEnumerable<Player>> GetPlayersByTeamAsync(Guid teamId)
+    {
+        return await _context.Players
+            .Where(p => p.TeamId == teamId && p.IsActive)
+            .OrderBy(p => p.Position)
+            .ThenBy(p => p.Name)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Player>> SearchPlayersAsync(string searchTerm)
+    {
+        return await _context.Players
+            .Where(p => p.Name.Contains(searchTerm) ||
+                       p.Position.Contains(searchTerm) ||
+                       p.JerseyNumber.Contains(searchTerm))
+            .Where(p => p.IsActive)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+    }
+
+    public async Task<Player?> GetPlayerByJerseyNumberAsync(string jerseyNumber)
+    {
+        return await _context.Players
+            .FirstOrDefaultAsync(p => p.JerseyNumber == jerseyNumber && p.IsActive);
+    }
+
+    public async Task<bool> JerseyNumberExistsAsync(string jerseyNumber, Guid? excludePlayerId = null)
+    {
+        if (excludePlayerId.HasValue)
+        {
+            return await _context.Players
+                .AnyAsync(p => p.JerseyNumber == jerseyNumber &&
+                              p.Id != excludePlayerId.Value &&
+                              p.IsActive);
+        }
+
+        return await _context.Players
+            .AnyAsync(p => p.JerseyNumber == jerseyNumber && p.IsActive);
     }
 }

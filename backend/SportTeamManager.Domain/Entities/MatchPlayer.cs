@@ -1,12 +1,16 @@
-﻿using System.Numerics;
+﻿using SportTeamManager.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportTeamManager.Domain.Entities;
 
-public class MatchPlayer
+public class MatchPlayer : BaseEntity
 {
     public Guid Id { get; set; }
+
+    // Foreign Keys
     public Guid MatchId { get; set; }
     public Guid PlayerId { get; set; }
+
     public bool IsStarter { get; set; }
     public string? Position { get; set; }
     public int? MinutesPlayed { get; set; }
@@ -17,6 +21,9 @@ public class MatchPlayer
     public string? Notes { get; set; }
 
     // Navigation properties
+    [ForeignKey("MatchId")]
     public virtual Match Match { get; set; } = null!;
+
+    [ForeignKey("PlayerId")]
     public virtual Player Player { get; set; } = null!;
 }

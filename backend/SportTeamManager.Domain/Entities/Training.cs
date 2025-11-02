@@ -1,6 +1,8 @@
-﻿namespace SportTeamManager.Domain.Entities;
+﻿using SportTeamManager.Domain.Common;
 
-public class Training
+namespace SportTeamManager.Domain.Entities;
+
+public class Training : BaseEntity
 {
     public Guid Id { get; set; }
     public DateTime Date { get; set; }

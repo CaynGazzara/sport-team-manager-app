@@ -1,0 +1,14 @@
+.navbar-brand {
+  font-size: 1.4rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &.active {
+    font-weight: bold;
+    border-radius: 0.25rem;
+  }
+}

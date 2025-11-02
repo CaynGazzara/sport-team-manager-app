@@ -17,6 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add repositories
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<ITrainingRepository, TrainingRepository>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IMatchPlayerRepository, MatchPlayerRepository>();
+builder.Services.AddScoped<IPlayerStatisticRepository, PlayerStatisticRepository>();
+builder.Services.AddScoped<ITrainingAttendanceRepository, TrainingAttendanceRepository>();
 
 // Add CORS
 builder.Services.AddCors(options =>

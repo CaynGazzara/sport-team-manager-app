@@ -1,0 +1,152 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">
+          <span class="material-icons">groups</span>
+          {{ title }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="loading-spinner">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+
+        <form *ngIf="!loading" [formGroup]="teamForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <!-- Nome do Time -->
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Nome do Time *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="name" 
+                formControlName="name"
+                placeholder="Ex: Time Principal"
+                [class.is-invalid]="teamForm.get('name')?.invalid && teamForm.get('name')?.touched">
+              <div class="invalid-feedback" *ngIf="teamForm.get('name')?.errors?.['required']">
+                Nome do time é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="teamForm.get('name')?.errors?.['minlength']">
+                Nome deve ter pelo menos 2 caracteres
+              </div>
+            </div>
+
+            <!-- Tipo de Esporte -->
+            <div class="col-md-6 mb-3">
+              <label for="sportType" class="form-label">Esporte *</label>
+              <select 
+                class="form-select" 
+                id="sportType" 
+                formControlName="sportType"
+                [class.is-invalid]="teamForm.get('sportType')?.invalid && teamForm.get('sportType')?.touched"
+                [disabled]="isEditMode">
+                <option *ngFor="let sport of sportTypes" [value]="sport">
+                  {{ sport }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="teamForm.get('sportType')?.errors?.['required']">
+                Tipo de esporte é obrigatório
+              </div>
+              <small *ngIf="isEditMode" class="form-text text-muted">
+                O tipo de esporte não pode ser alterado após a criação do time.
+              </small>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Nome do Treinador -->
+            <div class="col-md-6 mb-3">
+              <label for="coachName" class="form-label">Nome do Treinador *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="coachName" 
+                formControlName="coachName"
+                placeholder="Ex: João Silva"
+                [class.is-invalid]="teamForm.get('coachName')?.invalid && teamForm.get('coachName')?.touched">
+              <div class="invalid-feedback" *ngIf="teamForm.get('coachName')?.errors?.['required']">
+                Nome do treinador é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="teamForm.get('coachName')?.errors?.['minlength']">
+                Nome deve ter pelo menos 2 caracteres
+              </div>
+            </div>
+
+            <!-- Campo/Estádio -->
+            <div class="col-md-6 mb-3">
+              <label for="homeField" class="form-label">Campo/Estádio *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="homeField" 
+                formControlName="homeField"
+                placeholder="Ex: Estádio Municipal"
+                [class.is-invalid]="teamForm.get('homeField')?.invalid && teamForm.get('homeField')?.touched">
+              <div class="invalid-feedback" *ngIf="teamForm.get('homeField')?.errors?.['required']">
+                Campo/estádio é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Data de Fundação -->
+            <div class="col-md-6 mb-3">
+              <label for="foundedDate" class="form-label">Data de Fundação *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="foundedDate" 
+                formControlName="foundedDate"
+                [class.is-invalid]="teamForm.get('foundedDate')?.invalid && teamForm.get('foundedDate')?.touched"
+                [disabled]="isEditMode">
+              <div class="invalid-feedback" *ngIf="teamForm.get('foundedDate')?.errors?.['required']">
+                Data de fundação é obrigatória
+              </div>
+              <small *ngIf="isEditMode" class="form-text text-muted">
+                A data de fundação não pode ser alterada.
+              </small>
+            </div>
+
+            <!-- Cores -->
+            <div class="col-md-6 mb-3">
+              <label for="colors" class="form-label">Cores *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="colors" 
+                formControlName="colors"
+                placeholder="Ex: Azul e Branco"
+                [class.is-invalid]="teamForm.get('colors')?.invalid && teamForm.get('colors')?.touched">
+              <div class="invalid-feedback" *ngIf="teamForm.get('colors')?.errors?.['required']">
+                Cores são obrigatórias
+              </div>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <div class="row">
+            <div class="col-12">
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-secondary" (click)="cancel()">
+                  <span class="material-icons">cancel</span>
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="submitting || teamForm.invalid">
+                  <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                  <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
+                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Time
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

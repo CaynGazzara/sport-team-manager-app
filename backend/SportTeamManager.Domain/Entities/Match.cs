@@ -1,6 +1,8 @@
-﻿namespace SportTeamManager.Domain.Entities;
+﻿using SportTeamManager.Domain.Common;
 
-public class Match
+namespace SportTeamManager.Domain.Entities;
+
+public class Match : BaseEntity
 {
     public Guid Id { get; set; }
     public DateTime Date { get; set; }

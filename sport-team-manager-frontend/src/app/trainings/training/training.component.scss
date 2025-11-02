@@ -1,0 +1,22 @@
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.loading-spinner {
+  height: 200px;
+}

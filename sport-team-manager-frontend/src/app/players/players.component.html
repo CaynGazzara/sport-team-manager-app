@@ -1,0 +1,212 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">
+          <span class="material-icons">person</span>
+          {{ title }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="loading-spinner">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+
+        <form *ngIf="!loading" [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <!-- Nome -->
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Nome completo *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="name" 
+                formControlName="name"
+                [class.is-invalid]="playerForm.get('name')?.invalid && playerForm.get('name')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('name')?.errors?.['required']">
+                Nome é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="playerForm.get('name')?.errors?.['minlength']">
+                Nome deve ter pelo menos 2 caracteres
+              </div>
+            </div>
+
+            <!-- Idade -->
+            <div class="col-md-6 mb-3">
+              <label for="age" class="form-label">Idade *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="age" 
+                formControlName="age"
+                [class.is-invalid]="playerForm.get('age')?.invalid && playerForm.get('age')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('age')?.errors?.['required']">
+                Idade é obrigatória
+              </div>
+              <div class="invalid-feedback" *ngIf="playerForm.get('age')?.errors?.['min'] || playerForm.get('age')?.errors?.['max']">
+                Idade deve estar entre 16 e 50 anos
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Posição -->
+            <div class="col-md-6 mb-3">
+              <label for="position" class="form-label">Posição *</label>
+              <select 
+                class="form-select" 
+                id="position" 
+                formControlName="position"
+                [class.is-invalid]="playerForm.get('position')?.invalid && playerForm.get('position')?.touched">
+                <option value="">Selecione uma posição</option>
+                <option *ngFor="let position of positions" [value]="position">
+                  {{ position }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="playerForm.get('position')?.errors?.['required']">
+                Posição é obrigatória
+              </div>
+            </div>
+
+            <!-- Número da Camisa -->
+            <div class="col-md-6 mb-3">
+              <label for="jerseyNumber" class="form-label">Número da Camisa *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="jerseyNumber" 
+                formControlName="jerseyNumber"
+                [class.is-invalid]="playerForm.get('jerseyNumber')?.invalid && playerForm.get('jerseyNumber')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('jerseyNumber')?.errors?.['required']">
+                Número da camisa é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="playerForm.get('jerseyNumber')?.errors?.['pattern']">
+                Apenas números são permitidos
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Data de Nascimento -->
+            <div class="col-md-6 mb-3">
+              <label for="birthDate" class="form-label">Data de Nascimento *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="birthDate" 
+                formControlName="birthDate"
+                [class.is-invalid]="playerForm.get('birthDate')?.invalid && playerForm.get('birthDate')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('birthDate')?.errors?.['required']">
+                Data de nascimento é obrigatória
+              </div>
+            </div>
+
+            <!-- Data de Ingresso -->
+            <div class="col-md-6 mb-3">
+              <label for="joinDate" class="form-label">Data de Ingresso *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="joinDate" 
+                formControlName="joinDate"
+                [class.is-invalid]="playerForm.get('joinDate')?.invalid && playerForm.get('joinDate')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('joinDate')?.errors?.['required']">
+                Data de ingresso é obrigatória
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Altura -->
+            <div class="col-md-4 mb-3">
+              <label for="height" class="form-label">Altura (m) *</label>
+              <input 
+                type="number" 
+                step="0.01" 
+                class="form-control" 
+                id="height" 
+                formControlName="height"
+                [class.is-invalid]="playerForm.get('height')?.invalid && playerForm.get('height')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('height')?.errors?.['required']">
+                Altura é obrigatória
+              </div>
+              <div class="invalid-feedback" *ngIf="playerForm.get('height')?.errors?.['min'] || playerForm.get('height')?.errors?.['max']">
+                Altura deve estar entre 1.50m e 2.20m
+              </div>
+            </div>
+
+            <!-- Peso -->
+            <div class="col-md-4 mb-3">
+              <label for="weight" class="form-label">Peso (kg) *</label>
+              <input 
+                type="number" 
+                step="0.1" 
+                class="form-control" 
+                id="weight" 
+                formControlName="weight"
+                [class.is-invalid]="playerForm.get('weight')?.invalid && playerForm.get('weight')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('weight')?.errors?.['required']">
+                Peso é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="playerForm.get('weight')?.errors?.['min'] || playerForm.get('weight')?.errors?.['max']">
+                Peso deve estar entre 50kg e 120kg
+              </div>
+            </div>
+
+            <!-- Nacionalidade -->
+            <div class="col-md-4 mb-3">
+              <label for="nationality" class="form-label">Nacionalidade *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="nationality" 
+                formControlName="nationality"
+                [class.is-invalid]="playerForm.get('nationality')?.invalid && playerForm.get('nationality')?.touched">
+              <div class="invalid-feedback" *ngIf="playerForm.get('nationality')?.errors?.['required']">
+                Nacionalidade é obrigatória
+              </div>
+            </div>
+          </div>
+
+          <!-- Status (apenas no modo edição) -->
+          <div class="row" *ngIf="isEditMode">
+            <div class="col-12 mb-3">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="isActive" 
+                  formControlName="isActive">
+                <label class="form-check-label" for="isActive">
+                  Jogador ativo
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <div class="row">
+            <div class="col-12">
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-secondary" (click)="cancel()">
+                  <span class="material-icons">cancel</span>
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="submitting || playerForm.invalid">
+                  <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                  <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
+                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Jogador
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

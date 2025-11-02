@@ -1,0 +1,236 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">
+          <span class="material-icons">sports</span>
+          {{ title }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="loading-spinner">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+
+        <form *ngIf="!loading" [formGroup]="matchForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Seleção de Time -->
+          <div class="row" *ngIf="teams.length > 0">
+            <div class="col-12 mb-3">
+              <label for="teamId" class="form-label">Nosso Time *</label>
+              <select 
+                class="form-select" 
+                id="teamId" 
+                formControlName="teamId"
+                [class.is-invalid]="matchForm.get('teamId')?.invalid && matchForm.get('teamId')?.touched">
+                <option value="">Selecione nosso time</option>
+                <option *ngFor="let team of teams" [value]="team.id">
+                  {{ team.name }} - {{ team.coachName }} ({{ team.sportType }})
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="matchForm.get('teamId')?.errors?.['required']">
+                Seleção de time é obrigatória
+              </div>
+              
+              <!-- ✅ Mostra o time selecionado -->
+              <div *ngIf="matchForm.get('teamId')?.value" class="mt-2">
+                <small class="text-success">
+                  <span class="material-icons">check_circle</span>
+                  Time selecionado: <strong>{{ getSelectedTeamName() }}</strong>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Data -->
+            <div class="col-md-6 mb-3">
+              <label for="date" class="form-label">Data da Partida *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="date" 
+                formControlName="date"
+                [class.is-invalid]="matchForm.get('date')?.invalid && matchForm.get('date')?.touched">
+              <div class="invalid-feedback" *ngIf="matchForm.get('date')?.errors?.['required']">
+                Data é obrigatória
+              </div>
+            </div>
+
+            <!-- ✅ ATUALIZADO: Adversário como Select -->
+            <div class="col-md-6 mb-3">
+              <label for="opponent" class="form-label">Time Adversário *</label>
+              <select 
+                class="form-select" 
+                id="opponent" 
+                formControlName="opponent"
+                [class.is-invalid]="matchForm.get('opponent')?.invalid && matchForm.get('opponent')?.touched"
+                [disabled]="!matchForm.get('teamId')?.value">
+                <option value="">Selecione o adversário</option>
+                <option *ngFor="let team of opponentTeams" [value]="team.id">
+                  {{ team.name }} - {{ team.coachName }} ({{ team.sportType }})
+                </option>
+              </select>
+              
+              <div class="invalid-feedback" *ngIf="matchForm.get('opponent')?.errors?.['required']">
+                Seleção do adversário é obrigatória
+              </div>
+              
+              <!-- ✅ Mensagem informativa -->
+              <div *ngIf="!matchForm.get('teamId')?.value" class="mt-1">
+                <small class="text-warning">
+                  <span class="material-icons">info</span>
+                  Selecione primeiro "Nosso Time" para escolher o adversário
+                </small>
+              </div>
+              
+              <!-- ✅ Mostra o adversário selecionado -->
+              <div *ngIf="matchForm.get('opponent')?.value" class="mt-2">
+                <small class="text-info">
+                  <span class="material-icons">sports</span>
+                  Adversário: <strong>{{ getSelectedOpponentName() }}</strong>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Local -->
+            <div class="col-md-6 mb-3">
+              <label for="location" class="form-label">Local *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="location" 
+                formControlName="location"
+                placeholder="Ex: Estádio Municipal"
+                [class.is-invalid]="matchForm.get('location')?.invalid && matchForm.get('location')?.touched">
+              <div class="invalid-feedback" *ngIf="matchForm.get('location')?.errors?.['required']">
+                Local é obrigatório
+              </div>
+            </div>
+
+            <!-- Tipo de Partida -->
+            <div class="col-md-6 mb-3">
+              <label for="matchType" class="form-label">Tipo de Partida *</label>
+              <select 
+                class="form-select" 
+                id="matchType" 
+                formControlName="matchType"
+                [class.is-invalid]="matchForm.get('matchType')?.invalid && matchForm.get('matchType')?.touched">
+                <option *ngFor="let type of matchTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="matchForm.get('matchType')?.errors?.['required']">
+                Tipo de partida é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultado -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="result" class="form-label">Resultado *</label>
+              <select 
+                class="form-select" 
+                id="result" 
+                formControlName="result"
+                [class.is-invalid]="matchForm.get('result')?.invalid && matchForm.get('result')?.touched">
+                <option *ngFor="let result of results" [value]="result">
+                  {{ result === 'Scheduled' ? 'Agendada' : 
+                      result === 'Win' ? 'Vitória' :
+                      result === 'Loss' ? 'Derrota' :
+                      result === 'Draw' ? 'Empate' :
+                      result === 'Postponed' ? 'Adiada' :
+                      result === 'Cancelled' ? 'Cancelada' : result }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="matchForm.get('result')?.errors?.['required']">
+                Resultado é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <!-- Placar (mostrar apenas se não for agendada/adiada/cancelada) -->
+          <div class="row" *ngIf="showScoreFields">
+            <div class="col-md-6 mb-3">
+              <label for="teamScore" class="form-label">
+                Placar do <strong>{{ getSelectedTeamName() }}</strong>
+              </label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="teamScore" 
+                formControlName="teamScore"
+                min="0"
+                placeholder="0">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="opponentScore" class="form-label">
+                Placar do <strong>{{ getSelectedOpponentName() }}</strong>
+              </label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="opponentScore" 
+                formControlName="opponentScore"
+                min="0"
+                placeholder="0">
+            </div>
+          </div>
+
+          <!-- Observações -->
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="notes" class="form-label">Observações</label>
+              <textarea 
+                class="form-control" 
+                id="notes" 
+                formControlName="notes"
+                rows="3"
+                placeholder="Observações sobre a partida..."></textarea>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <div class="row">
+            <div class="col-12">
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-secondary" (click)="cancel()">
+                  <span class="material-icons">cancel</span>
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="submitting || matchForm.invalid">
+                  <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                  <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
+                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Partida
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Mensagem se não houver times -->
+        <div *ngIf="teams.length === 0 && !loading" class="alert alert-warning">
+          <span class="material-icons">warning</span>
+          Nenhum time encontrado. Você precisa criar pelo menos 2 times antes de agendar partidas.
+          <button class="btn btn-sm btn-outline-primary ms-2" routerLink="/teams/new">
+            Criar Time
+          </button>
+        </div>
+
+        <!-- ✅ Mensagem se não houver adversários disponíveis -->
+        <div *ngIf="teams.length === 1 && !loading" class="alert alert-info">
+          <span class="material-icons">info</span>
+          Você precisa criar pelo menos 2 times para poder agendar partidas.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
