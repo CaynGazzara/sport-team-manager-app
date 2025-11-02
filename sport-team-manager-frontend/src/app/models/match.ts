@@ -37,6 +37,7 @@ export interface UpdateMatch {
   notes?: string;
 }
 
+// ✅ CORRIGIDO: MatchWithPlayers deve extender Match e adicionar matchPlayers
 export interface MatchWithPlayers extends Match {
   matchPlayers: MatchPlayer[];
 }

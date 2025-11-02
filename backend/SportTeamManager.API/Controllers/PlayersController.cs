@@ -2,7 +2,6 @@
 using SportTeamManager.Application.DTOs;
 using SportTeamManager.Application.Interfaces;
 using SportTeamManager.Domain.Entities;
-using System.Numerics;
 
 namespace SportTeamManager.API.Controllers;
 
@@ -11,10 +10,12 @@ namespace SportTeamManager.API.Controllers;
 public class PlayersController : ControllerBase
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly ITeamRepository _teamRepository; // ✅ ADICIONAR esta linha
 
-    public PlayersController(IPlayerRepository playerRepository)
+    public PlayersController(IPlayerRepository playerRepository, ITeamRepository teamRepository) // ✅ ADICIONAR teamRepository
     {
         _playerRepository = playerRepository;
+        _teamRepository = teamRepository; // ✅ ADICIONAR esta linha
     }
 
     [HttpGet]
@@ -34,6 +35,7 @@ public class PlayersController : ControllerBase
             Nationality = p.Nationality,
             JoinDate = p.JoinDate,
             IsActive = p.IsActive,
+            TeamId = p.TeamId, // ✅ ADICIONAR esta linha
             CreatedAt = p.CreatedAt,
             UpdatedAt = p.UpdatedAt
         });
@@ -63,6 +65,7 @@ public class PlayersController : ControllerBase
             Nationality = player.Nationality,
             JoinDate = player.JoinDate,
             IsActive = player.IsActive,
+            TeamId = player.TeamId, // ✅ ADICIONAR esta linha
             CreatedAt = player.CreatedAt,
             UpdatedAt = player.UpdatedAt
         };
@@ -73,42 +76,71 @@ public class PlayersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PlayerDto>> CreatePlayer(CreatePlayerDto createPlayerDto)
     {
-        var player = new Player
+        try
         {
-            Id = Guid.NewGuid(),
-            Name = createPlayerDto.Name,
-            Age = createPlayerDto.Age,
-            Position = createPlayerDto.Position,
-            JerseyNumber = createPlayerDto.JerseyNumber,
-            BirthDate = createPlayerDto.BirthDate,
-            Height = createPlayerDto.Height,
-            Weight = createPlayerDto.Weight,
-            Nationality = createPlayerDto.Nationality,
-            JoinDate = createPlayerDto.JoinDate,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
+            // ✅ NORMALIZAR o TeamId para maiúsculo (corrigindo o erro de conversão)
+            var teamIdString = createPlayerDto.TeamId.ToString();
+            var normalizedTeamId = teamIdString.ToUpperInvariant();
 
-        var createdPlayer = await _playerRepository.AddAsync(player);
+            Console.WriteLine($"🎯 TeamId recebido do frontend: {createPlayerDto.TeamId}");
+            Console.WriteLine($"🎯 TeamId normalizado: {normalizedTeamId}");
 
-        var playerDto = new PlayerDto
+            // Verificar se o time existe
+            var teamIdGuid = Guid.Parse(normalizedTeamId);
+            var teamExists = await _teamRepository.ExistsAsync(teamIdGuid);
+            if (!teamExists)
+            {
+                Console.WriteLine($"❌ Time não encontrado: {normalizedTeamId}");
+                return BadRequest($"Time com ID {normalizedTeamId} não encontrado");
+            }
+
+            var player = new Player
+            {
+                Id = Guid.NewGuid(),
+                Name = createPlayerDto.Name,
+                Age = createPlayerDto.Age,
+                Position = createPlayerDto.Position,
+                JerseyNumber = createPlayerDto.JerseyNumber,
+                BirthDate = createPlayerDto.BirthDate,
+                Height = createPlayerDto.Height,
+                Weight = createPlayerDto.Weight,
+                Nationality = createPlayerDto.Nationality,
+                JoinDate = createPlayerDto.JoinDate,
+                IsActive = true,
+                TeamId = teamIdGuid, // ✅ Usar GUID normalizado
+                CreatedAt = DateTime.UtcNow
+            };
+
+            Console.WriteLine($"✅ Criando jogador para o time: {normalizedTeamId}");
+
+            var createdPlayer = await _playerRepository.AddAsync(player);
+
+            var playerDto = new PlayerDto
+            {
+                Id = createdPlayer.Id,
+                Name = createdPlayer.Name,
+                Age = createdPlayer.Age,
+                Position = createdPlayer.Position,
+                JerseyNumber = createdPlayer.JerseyNumber,
+                BirthDate = createdPlayer.BirthDate,
+                Height = createdPlayer.Height,
+                Weight = createdPlayer.Weight,
+                Nationality = createdPlayer.Nationality,
+                JoinDate = createdPlayer.JoinDate,
+                IsActive = createdPlayer.IsActive,
+                TeamId = createdPlayer.TeamId, // ✅ ADICIONAR esta linha
+                CreatedAt = createdPlayer.CreatedAt,
+                UpdatedAt = createdPlayer.UpdatedAt
+            };
+
+            return CreatedAtAction(nameof(GetPlayer), new { id = playerDto.Id }, playerDto);
+        }
+        catch (Exception ex)
         {
-            Id = createdPlayer.Id,
-            Name = createdPlayer.Name,
-            Age = createdPlayer.Age,
-            Position = createdPlayer.Position,
-            JerseyNumber = createdPlayer.JerseyNumber,
-            BirthDate = createdPlayer.BirthDate,
-            Height = createdPlayer.Height,
-            Weight = createdPlayer.Weight,
-            Nationality = createdPlayer.Nationality,
-            JoinDate = createdPlayer.JoinDate,
-            IsActive = createdPlayer.IsActive,
-            CreatedAt = createdPlayer.CreatedAt,
-            UpdatedAt = createdPlayer.UpdatedAt
-        };
-
-        return CreatedAtAction(nameof(GetPlayer), new { id = playerDto.Id }, playerDto);
+            Console.WriteLine($"❌ Erro ao criar jogador: {ex.Message}");
+            Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+            return StatusCode(500, "Erro interno do servidor");
+        }
     }
 
     [HttpPut("{id}")]
@@ -164,6 +196,7 @@ public class PlayersController : ControllerBase
             Nationality = p.Nationality,
             JoinDate = p.JoinDate,
             IsActive = p.IsActive,
+            TeamId = p.TeamId, // ✅ ADICIONAR esta linha
             CreatedAt = p.CreatedAt,
             UpdatedAt = p.UpdatedAt
         });

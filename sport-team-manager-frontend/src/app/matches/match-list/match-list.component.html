@@ -75,7 +75,7 @@
                   <button class="btn btn-outline-primary" [routerLink]="['/matches/edit', match.id]">
                     <span class="material-icons">edit</span>
                   </button>
-                  <button class="btn btn-outline-info" title="Detalhes">
+                  <button class="btn btn-outline-info btn-sm" [routerLink]="['/matches', match.id, 'details']">
                     <span class="material-icons">visibility</span>
                   </button>
                   <button class="btn btn-outline-danger" (click)="deleteMatch(match.id)">
@@ -124,7 +124,7 @@
               <div class="score" *ngIf="match.opponentScore !== null">{{ match.opponentScore }}</div>
             </div>
           </div>
-          
+
           <div class="match-details">
             <div class="detail-item">
               <span class="material-icons">location_on</span>
@@ -144,7 +144,7 @@
           <button class="btn btn-outline-primary btn-sm" [routerLink]="['/matches/edit', match.id]">
             <span class="material-icons">edit</span>
           </button>
-          <button class="btn btn-outline-info btn-sm">
+          <button class="btn btn-outline-info btn-sm" [routerLink]="['/matches', match.id, 'details']">
             <span class="material-icons">visibility</span>
           </button>
           <button class="btn btn-outline-danger btn-sm" (click)="deleteMatch(match.id)">

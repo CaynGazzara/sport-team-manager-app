@@ -1,12 +1,19 @@
+<div class="row justify-content-center fade-in">
+  <div class="col-12">
+    <div class="page-header mb-4">
+      <h2 class="mb-2">
+        <span class="material-icons">groups</span>
+        {{ title }}
+      </h2>
+      <p class="text-muted mb-0" *ngIf="isEditMode">Editando informações do time</p>
+      <p class="text-muted mb-0" *ngIf="!isEditMode">Crie um novo time para o sistema</p>
+    </div>
+  </div>
+</div>
+
 <div class="row justify-content-center">
-  <div class="col-md-8">
+  <div class="col-xl-10">
     <div class="card">
-      <div class="card-header">
-        <h4 class="card-title mb-0">
-          <span class="material-icons">groups</span>
-          {{ title }}
-        </h4>
-      </div>
       <div class="card-body">
         <div *ngIf="loading" class="loading-spinner">
           <div class="spinner-border text-primary" role="status">
@@ -15,9 +22,10 @@
         </div>
 
         <form *ngIf="!loading" [formGroup]="teamForm" (ngSubmit)="onSubmit()">
-          <div class="row">
-            <!-- Nome do Time -->
-            <div class="col-md-6 mb-3">
+          
+          <!-- Informações Básicas -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="name" class="form-label">Nome do Time *</label>
               <input 
                 type="text" 
@@ -32,10 +40,10 @@
               <div class="invalid-feedback" *ngIf="teamForm.get('name')?.errors?.['minlength']">
                 Nome deve ter pelo menos 2 caracteres
               </div>
+              <span class="help-text">Digite o nome oficial do time</span>
             </div>
 
-            <!-- Tipo de Esporte -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="sportType" class="form-label">Esporte *</label>
               <select 
                 class="form-select" 
@@ -50,15 +58,15 @@
               <div class="invalid-feedback" *ngIf="teamForm.get('sportType')?.errors?.['required']">
                 Tipo de esporte é obrigatório
               </div>
-              <small *ngIf="isEditMode" class="form-text text-muted">
+              <span *ngIf="isEditMode" class="help-text text-warning">
                 O tipo de esporte não pode ser alterado após a criação do time.
-              </small>
+              </span>
             </div>
           </div>
 
-          <div class="row">
-            <!-- Nome do Treinador -->
-            <div class="col-md-6 mb-3">
+          <!-- Staff e Local -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="coachName" class="form-label">Nome do Treinador *</label>
               <input 
                 type="text" 
@@ -75,8 +83,7 @@
               </div>
             </div>
 
-            <!-- Campo/Estádio -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="homeField" class="form-label">Campo/Estádio *</label>
               <input 
                 type="text" 
@@ -91,9 +98,9 @@
             </div>
           </div>
 
-          <div class="row">
-            <!-- Data de Fundação -->
-            <div class="col-md-6 mb-3">
+          <!-- Identidade Visual -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="foundedDate" class="form-label">Data de Fundação *</label>
               <input 
                 type="date" 
@@ -105,13 +112,12 @@
               <div class="invalid-feedback" *ngIf="teamForm.get('foundedDate')?.errors?.['required']">
                 Data de fundação é obrigatória
               </div>
-              <small *ngIf="isEditMode" class="form-text text-muted">
+              <span *ngIf="isEditMode" class="help-text text-warning">
                 A data de fundação não pode ser alterada.
-              </small>
+              </span>
             </div>
 
-            <!-- Cores -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="colors" class="form-label">Cores *</label>
               <input 
                 type="text" 
@@ -123,16 +129,17 @@
               <div class="invalid-feedback" *ngIf="teamForm.get('colors')?.errors?.['required']">
                 Cores são obrigatórias
               </div>
+              <span class="help-text">Descreva as cores principais do time</span>
             </div>
           </div>
 
           <!-- Botões -->
-          <div class="row">
+          <div class="form-row mt-4">
             <div class="col-12">
-              <div class="d-flex gap-2 justify-content-end">
+              <div class="d-flex gap-3 justify-content-end border-top pt-4">
                 <button type="button" class="btn btn-secondary" (click)="cancel()">
-                  <span class="material-icons">cancel</span>
-                  Cancelar
+                  <span class="material-icons">arrow_back</span>
+                  Voltar
                 </button>
                 <button 
                   type="submit" 
@@ -140,7 +147,7 @@
                   [disabled]="submitting || teamForm.invalid">
                   <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
                   <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
-                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Time
+                  {{ isEditMode ? 'Atualizar Time' : 'Criar Time' }}
                 </button>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Team, CreateTeam, UpdateTeam, TeamWithPlayers } from '../models/team';
 
 @Injectable({
@@ -10,9 +10,12 @@ export class TeamService {
   private apiUrl = 'https://localhost:7279/api/teams';
 
   constructor(private http: HttpClient) { }
-
+  
   getTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(this.apiUrl);
+    console.log('🔄 Buscando times da API...');
+    return this.http.get<Team[]>(this.apiUrl).pipe(
+      tap(teams => console.log('✅ Times recebidos:', teams))
+    );
   }
 
   getTeam(id: string): Observable<Team> {

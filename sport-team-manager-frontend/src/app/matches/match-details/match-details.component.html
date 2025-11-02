@@ -1,0 +1,206 @@
+<div class="page-header d-flex justify-content-between align-items-center fade-in">
+  <div>
+    <h2 class="mb-2">
+      <span class="material-icons">sports</span>
+      Detalhes da Partida
+    </h2>
+    <p class="text-muted mb-0">Informações completas sobre o jogo</p>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-secondary" (click)="goBack()">
+      <span class="material-icons">arrow_back</span>
+      Voltar
+    </button>
+    <button class="btn btn-primary" (click)="editMatch()" *ngIf="match">
+      <span class="material-icons">edit</span>
+      Editar
+    </button>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-spinner">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+</div>
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  <span class="material-icons">error</span>
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error && match" class="fade-in">
+  
+  <!-- Cabeçalho da Partida -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="card-title mb-0">{{ formatDate(match.date) }}</h4>
+        <div class="d-flex gap-2">
+          <span class="badge" [ngClass]="getMatchTypeBadgeClass(match.matchType)">
+            {{ match.matchType }}
+          </span>
+          <span class="badge" [ngClass]="getResultBadgeClass(match.result)">
+            {{ getResultText(match.result) }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      
+      <!-- Placar -->
+      <div class="row align-items-center mb-4">
+        <div class="col-md-5 text-center">
+          <div class="team-display">
+            <h5 class="team-name">{{ getTeamName() }}</h5>
+            <div class="score" *ngIf="match.teamScore !== null">
+              {{ match.teamScore }}
+            </div>
+            <div class="score-placeholder" *ngIf="match.teamScore === null">
+              -
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-2 text-center">
+          <div class="vs-container">
+            <span class="vs-text">VS</span>
+            <div class="match-score" *ngIf="match.teamScore !== null && match.opponentScore !== null">
+              {{ match.teamScore }} - {{ match.opponentScore }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-5 text-center">
+          <div class="team-display">
+            <h5 class="team-name">{{ match.opponent }}</h5>
+            <div class="score" *ngIf="match.opponentScore !== null">
+              {{ match.opponentScore }}
+            </div>
+            <div class="score-placeholder" *ngIf="match.opponentScore === null">
+              -
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações da Partida -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="info-item mb-3">
+            <span class="material-icons">location_on</span>
+            <div>
+              <strong>Local:</strong>
+              <div class="text-muted">{{ match.location }}</div>
+            </div>
+          </div>
+          
+          <div class="info-item mb-3">
+            <span class="material-icons">sports_soccer</span>
+            <div>
+              <strong>Tipo de Partida:</strong>
+              <div class="text-muted">{{ match.matchType }}</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="info-item mb-3">
+            <span class="material-icons">flag</span>
+            <div>
+              <strong>Resultado:</strong>
+              <div>
+                <span class="badge" [ngClass]="getResultBadgeClass(match.result)">
+                  {{ getResultText(match.result) }}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-item" *ngIf="team">
+            <span class="material-icons">groups</span>
+            <div>
+              <strong>Time:</strong>
+              <div class="text-muted">{{ team.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="row" *ngIf="match.notes">
+        <div class="col-12">
+          <div class="info-item">
+            <span class="material-icons">notes</span>
+            <div>
+              <strong>Observações:</strong>
+              <div class="text-muted">{{ match.notes }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escalação (se disponível) -->
+  <div class="card" *ngIf="hasLineup()">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Escalação</h5>
+    </div>
+    <div class="card-body">
+      
+    <!-- Titulares -->
+<div class="mb-4">
+  <h6 class="section-title">
+    <span class="material-icons">star</span>
+    Titulares
+  </h6>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let player of getStarters()">
+      <div class="player-lineup-item">
+        <span class="jersey-number">#{{ getPlayerInitial(player) }}</span>
+        <div class="player-info">
+          <strong>{{ getPlayerName(player) }}</strong>
+          <small class="text-muted">{{ player.position || 'Posição não definida' }}</small>
+        </div>
+        <div class="player-stats" *ngIf="player.goals || player.assists">
+          <small class="text-success" *ngIf="player.goals">⚽ {{ player.goals }}</small>
+          <small class="text-primary" *ngIf="player.assists">🎯 {{ player.assists }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reservas -->
+<div *ngIf="getSubstitutes().length > 0">
+  <h6 class="section-title">
+    <span class="material-icons">people</span>
+    Reservas
+  </h6>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let player of getSubstitutes()">
+      <div class="player-lineup-item">
+        <span class="jersey-number">#{{ getPlayerInitial(player) }}</span>
+        <div class="player-info">
+          <strong>{{ getPlayerName(player) }}</strong>
+          <small class="text-muted">{{ player.position || 'Reserva' }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Mensagem se não houver escalação -->
+  <div class="card" *ngIf="!hasLineup()">
+    <div class="card-body text-center">
+      <span class="material-icons display-4 text-muted mb-3">sports</span>
+      <h5>Escalação não disponível</h5>
+      <p class="text-muted">Nenhuma informação de escalação foi registrada para esta partida.</p>
+      <button class="btn btn-outline-primary" [routerLink]="['/matches/edit', match.id]">
+        <span class="material-icons">edit</span>
+        Adicionar Escalação
+      </button>
+    </div>
+  </div>
+</div>

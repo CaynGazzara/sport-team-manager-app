@@ -15,6 +15,7 @@ public class PlayerDto
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public Guid TeamId { get; set; }
 }
 
 public class CreatePlayerDto
@@ -28,6 +29,8 @@ public class CreatePlayerDto
     public decimal Weight { get; set; }
     public string Nationality { get; set; } = string.Empty;
     public DateTime JoinDate { get; set; }
+    public Guid TeamId { get; set; }
+
 }
 
 public class UpdatePlayerDto

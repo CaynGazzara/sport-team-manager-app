@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { PlayersRoutingModule } from './players-routing-module';
 import { PlayerListComponent } from './player-list/player-list.component';
-import { PlayerComponent } from './players.component';
+import { PlayerComponent } from './player.component';
 
 
 @NgModule({

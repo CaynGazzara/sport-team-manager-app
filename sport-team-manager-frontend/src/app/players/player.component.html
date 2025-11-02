@@ -1,12 +1,19 @@
+<div class="row justify-content-center fade-in">
+  <div class="col-12">
+    <div class="page-header mb-4">
+      <h2 class="mb-2">
+        <span class="material-icons">person</span>
+        {{ title }}
+      </h2>
+      <p class="text-muted mb-0" *ngIf="isEditMode">Editando informações do jogador</p>
+      <p class="text-muted mb-0" *ngIf="!isEditMode">Adicione um novo jogador ao time</p>
+    </div>
+  </div>
+</div>
+
 <div class="row justify-content-center">
-  <div class="col-md-8">
+  <div class="col-xl-10">
     <div class="card">
-      <div class="card-header">
-        <h4 class="card-title mb-0">
-          <span class="material-icons">person</span>
-          {{ title }}
-        </h4>
-      </div>
       <div class="card-body">
         <div *ngIf="loading" class="loading-spinner">
           <div class="spinner-border text-primary" role="status">
@@ -15,15 +22,45 @@
         </div>
 
         <form *ngIf="!loading" [formGroup]="playerForm" (ngSubmit)="onSubmit()">
-          <div class="row">
-            <!-- Nome -->
-            <div class="col-md-6 mb-3">
+          
+          <!-- ✅ NOVO: Seleção de Time -->
+          <div class="form-row" *ngIf="teams.length > 0">
+            <div class="col-12 form-col">
+              <label for="teamId" class="form-label">Time *</label>
+              <select 
+                class="form-select" 
+                id="teamId" 
+                formControlName="teamId"
+                [class.is-invalid]="playerForm.get('teamId')?.invalid && playerForm.get('teamId')?.touched">
+                <option value="">Selecione um time</option>
+                <option *ngFor="let team of teams" [value]="team.id">
+                  {{ team.name }} - {{ team.coachName }} ({{ team.sportType }})
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="playerForm.get('teamId')?.errors?.['required']">
+                Seleção de time é obrigatória
+              </div>
+              
+              <!-- ✅ Mostra o time selecionado -->
+              <div *ngIf="playerForm.get('teamId')?.value" class="team-selection-info">
+                <small class="text-success">
+                  <span class="material-icons">check_circle</span>
+                  Jogador será vinculado ao time: <strong>{{ getSelectedTeamName() }}</strong>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Informações Básicas -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="name" class="form-label">Nome completo *</label>
               <input 
                 type="text" 
                 class="form-control" 
                 id="name" 
                 formControlName="name"
+                placeholder="Ex: João Silva Santos"
                 [class.is-invalid]="playerForm.get('name')?.invalid && playerForm.get('name')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('name')?.errors?.['required']">
                 Nome é obrigatório
@@ -31,16 +68,18 @@
               <div class="invalid-feedback" *ngIf="playerForm.get('name')?.errors?.['minlength']">
                 Nome deve ter pelo menos 2 caracteres
               </div>
+              <span class="help-text">Digite o nome completo do jogador</span>
             </div>
 
-            <!-- Idade -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="age" class="form-label">Idade *</label>
               <input 
                 type="number" 
                 class="form-control" 
                 id="age" 
                 formControlName="age"
+                min="16"
+                max="50"
                 [class.is-invalid]="playerForm.get('age')?.invalid && playerForm.get('age')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('age')?.errors?.['required']">
                 Idade é obrigatória
@@ -51,9 +90,9 @@
             </div>
           </div>
 
-          <div class="row">
-            <!-- Posição -->
-            <div class="col-md-6 mb-3">
+          <!-- Posição e Número -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="position" class="form-label">Posição *</label>
               <select 
                 class="form-select" 
@@ -70,14 +109,14 @@
               </div>
             </div>
 
-            <!-- Número da Camisa -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="jerseyNumber" class="form-label">Número da Camisa *</label>
               <input 
                 type="text" 
                 class="form-control" 
                 id="jerseyNumber" 
                 formControlName="jerseyNumber"
+                placeholder="Ex: 10"
                 [class.is-invalid]="playerForm.get('jerseyNumber')?.invalid && playerForm.get('jerseyNumber')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('jerseyNumber')?.errors?.['required']">
                 Número da camisa é obrigatório
@@ -88,9 +127,9 @@
             </div>
           </div>
 
-          <div class="row">
-            <!-- Data de Nascimento -->
-            <div class="col-md-6 mb-3">
+          <!-- Datas Importantes -->
+          <div class="form-row">
+            <div class="col-md-6 form-col">
               <label for="birthDate" class="form-label">Data de Nascimento *</label>
               <input 
                 type="date" 
@@ -103,8 +142,7 @@
               </div>
             </div>
 
-            <!-- Data de Ingresso -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 form-col">
               <label for="joinDate" class="form-label">Data de Ingresso *</label>
               <input 
                 type="date" 
@@ -118,9 +156,9 @@
             </div>
           </div>
 
-          <div class="row">
-            <!-- Altura -->
-            <div class="col-md-4 mb-3">
+          <!-- Características Físicas -->
+          <div class="form-row">
+            <div class="col-md-4 form-col">
               <label for="height" class="form-label">Altura (m) *</label>
               <input 
                 type="number" 
@@ -128,6 +166,9 @@
                 class="form-control" 
                 id="height" 
                 formControlName="height"
+                min="1.50"
+                max="2.20"
+                placeholder="1.80"
                 [class.is-invalid]="playerForm.get('height')?.invalid && playerForm.get('height')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('height')?.errors?.['required']">
                 Altura é obrigatória
@@ -137,8 +178,7 @@
               </div>
             </div>
 
-            <!-- Peso -->
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 form-col">
               <label for="weight" class="form-label">Peso (kg) *</label>
               <input 
                 type="number" 
@@ -146,6 +186,9 @@
                 class="form-control" 
                 id="weight" 
                 formControlName="weight"
+                min="50"
+                max="120"
+                placeholder="75.0"
                 [class.is-invalid]="playerForm.get('weight')?.invalid && playerForm.get('weight')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('weight')?.errors?.['required']">
                 Peso é obrigatório
@@ -155,14 +198,14 @@
               </div>
             </div>
 
-            <!-- Nacionalidade -->
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 form-col">
               <label for="nationality" class="form-label">Nacionalidade *</label>
               <input 
                 type="text" 
                 class="form-control" 
                 id="nationality" 
                 formControlName="nationality"
+                placeholder="Ex: Brasileira"
                 [class.is-invalid]="playerForm.get('nationality')?.invalid && playerForm.get('nationality')?.touched">
               <div class="invalid-feedback" *ngIf="playerForm.get('nationality')?.errors?.['required']">
                 Nacionalidade é obrigatória
@@ -171,28 +214,30 @@
           </div>
 
           <!-- Status (apenas no modo edição) -->
-          <div class="row" *ngIf="isEditMode">
-            <div class="col-12 mb-3">
-              <div class="form-check">
+          <div class="form-row" *ngIf="isEditMode">
+            <div class="col-12 form-col">
+              <div class="form-check form-switch">
                 <input 
                   class="form-check-input" 
                   type="checkbox" 
+                  role="switch"
                   id="isActive" 
                   formControlName="isActive">
-                <label class="form-check-label" for="isActive">
-                  Jogador ativo
+                <label class="form-check-label fw-medium" for="isActive">
+                  Jogador ativo no time
                 </label>
+                <span class="help-text">Desative para remover o jogador do elenco atual</span>
               </div>
             </div>
           </div>
 
           <!-- Botões -->
-          <div class="row">
+          <div class="form-row mt-4">
             <div class="col-12">
-              <div class="d-flex gap-2 justify-content-end">
+              <div class="d-flex gap-3 justify-content-end border-top pt-4">
                 <button type="button" class="btn btn-secondary" (click)="cancel()">
-                  <span class="material-icons">cancel</span>
-                  Cancelar
+                  <span class="material-icons">arrow_back</span>
+                  Voltar
                 </button>
                 <button 
                   type="submit" 
@@ -200,12 +245,21 @@
                   [disabled]="submitting || playerForm.invalid">
                   <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
                   <span class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
-                  {{ isEditMode ? 'Atualizar' : 'Criar' }} Jogador
+                  {{ isEditMode ? 'Atualizar Jogador' : 'Criar Jogador' }}
                 </button>
               </div>
             </div>
           </div>
         </form>
+
+        <!-- ✅ Mensagem se não houver times -->
+        <div *ngIf="teams.length === 0 && !loading" class="alert alert-warning">
+          <span class="material-icons">warning</span>
+          Nenhum time encontrado. Você precisa criar um time antes de adicionar jogadores.
+          <button class="btn btn-sm btn-outline-primary ms-2" routerLink="/teams/new">
+            Criar Time
+          </button>
+        </div>
       </div>
     </div>
   </div>

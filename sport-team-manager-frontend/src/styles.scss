@@ -48,6 +48,7 @@ body {
     font-size: 1.5rem;
     background: linear-gradient(135deg, var(--primary-color), #7c3aed);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
@@ -110,7 +111,7 @@ body {
     padding: 1.25rem;
 
     .card-title {
-      margin: 0;
+      margin-top: 10px;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -269,6 +270,7 @@ body {
     font-size: 4rem;
     background: linear-gradient(135deg, var(--primary-color), #7c3aed);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
   }
@@ -282,6 +284,340 @@ body {
     color: var(--secondary-color);
     margin-bottom: 2rem;
   }
+}
+
+
+/* ... código existente ... */
+
+/* ===== MELHORIAS DE ESPAÇAMENTO ===== */
+
+/* Container Principal Melhorado */
+.main-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 1.5rem; /* Aumentado */
+  box-shadow: var(--shadow-lg);
+  margin: 2rem auto;
+  padding: 2.5rem; /* Aumentado */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-height: calc(100vh - 200px);
+}
+
+/* Cabeçalhos de Página */
+.page-header {
+  margin-bottom: 2.5rem !important; /* Mais espaço abaixo dos cabeçalhos */
+  
+  h2 {
+    margin-bottom: 0.5rem !important;
+    font-weight: 700;
+  }
+  
+  .btn {
+    margin-left: auto;
+  }
+}
+
+/* Cards Melhorados */
+.card {
+  border: none;
+  border-radius: 1.25rem; /* Aumentado */
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  background: white;
+  margin-bottom: 2rem; /* Mais espaço entre cards */
+
+  &:hover {
+    transform: translateY(-8px); /* Aumentado */
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+    color: white;
+    border-radius: 1.25rem 1.25rem 0 0 !important; /* Aumentado */
+    border: none;
+    padding: 1.5rem 2rem; /* Aumentado */
+
+    .card-title {
+      margin: 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem; /* Aumentado */
+      font-size: 1.25rem;
+    }
+  }
+
+  .card-body {
+    padding: 2rem; /* Aumentado */
+  }
+}
+
+/* Formulários Melhorados */
+.form-group {
+  margin-bottom: 1.75rem; /* Aumentado entre grupos de campos */
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 0.75rem; /* Aumentado */
+  font-size: 0.95rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  border-radius: 0.875rem; /* Aumentado */
+  border: 2px solid var(--border-color);
+  padding: 0.875rem 1.25rem; /* Aumentado */
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+
+  &:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+/* Botões Melhorados */
+.btn {
+  border-radius: 0.875rem; /* Aumentado */
+  font-weight: 500;
+  padding: 0.875rem 1.75rem; /* Aumentado */
+  border: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem; /* Aumentado */
+  font-size: 0.95rem;
+
+  &:hover {
+    transform: translateY(-3px); /* Aumentado */
+    box-shadow: var(--shadow);
+  }
+}
+
+.btn-group {
+  gap: 0.5rem; /* Espaço entre botões do grupo */
+  
+  .btn {
+    border-radius: 0.75rem;
+  }
+}
+
+/* Tabelas Melhoradas */
+.table {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin: 0;
+
+  thead th {
+    background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+    color: white;
+    border: none;
+    padding: 1.25rem 1.5rem; /* Aumentado */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+  }
+
+  tbody td {
+    padding: 1.25rem 1.5rem; /* Aumentado */
+    vertical-align: middle;
+    border-color: var(--border-color);
+  }
+
+  tbody tr {
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(37, 99, 235, 0.05);
+      transform: scale(1.01);
+    }
+  }
+}
+
+/* Grid de Cards Melhorado */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Aumentado */
+  gap: 2rem; /* Aumentado */
+}
+
+/* Badges Melhorados */
+.badge {
+  border-radius: 0.75rem; /* Aumentado */
+  padding: 0.625rem 0.875rem; /* Aumentado */
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* Alertas Melhorados */
+.alert {
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  
+  .material-icons {
+    margin-right: 0.75rem;
+  }
+}
+
+/* Loading Spinner Melhorado */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; /* Aumentado */
+
+  .spinner-border {
+    width: 3.5rem; /* Aumentado */
+    height: 3.5rem; /* Aumentado */
+    border-width: 0.3em;
+  }
+}
+
+/* Empty States Melhorados */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem; /* Aumentado */
+  
+  .material-icons {
+    font-size: 5rem; /* Aumentado */
+    background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+  }
+
+  h4 {
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: var(--secondary-color);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Layout de Formulários Melhorado */
+.form-row {
+  margin-bottom: 2rem; /* Mais espaço entre linhas do formulário */
+}
+
+.form-col {
+  margin-bottom: 1.5rem; /* Espaço entre colunas */
+}
+
+/* Informações de Time/Adversário Melhoradas */
+.team-selection-info {
+  background: rgba(37, 99, 235, 0.05);
+  border-radius: 0.875rem;
+  padding: 1rem 1.25rem;
+  margin-top: 0.75rem;
+  border-left: 4px solid var(--primary-color);
+  
+  small {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+}
+
+/* Botões de Ação em Tabelas */
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  
+  .btn {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Mensagens de Ajuda em Formulários */
+.help-text {
+  font-size: 0.875rem;
+  color: var(--secondary-color);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Responsividade Melhorada */
+@media (max-width: 768px) {
+  .main-container {
+    margin: 1rem;
+    padding: 1.75rem;
+    border-radius: 1rem;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    margin-bottom: 1.5rem;
+    
+    .card-header {
+      padding: 1.25rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .table {
+    font-size: 0.9rem;
+    
+    thead th,
+    tbody td {
+      padding: 1rem;
+    }
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem !important;
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+/* Animações Suaves */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll Suave */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Responsividade */

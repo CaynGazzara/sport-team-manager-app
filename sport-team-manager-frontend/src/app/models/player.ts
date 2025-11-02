@@ -12,6 +12,7 @@ export interface Player {
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
+  teamId: string; // ✅ ADICIONAR ESTA LINHA
 }
 
 export interface CreatePlayer {
@@ -24,6 +25,7 @@ export interface CreatePlayer {
   weight: number;
   nationality: string;
   joinDate: string;
+  teamId: string; // ✅ ADICIONAR ESTA LINHA
 }
 
 export interface UpdatePlayer {
